@@ -1,0 +1,19 @@
+.app {
+  padding-top: 5em;
+  display: flex;
+  justify-content: center;
+}
+
+.wrap {
+  width: 500px;
+}
+
+.select {
+  &__input {
+    border: 1px solid black;
+  }
+
+  &__dropdown {
+
+  }
+}
