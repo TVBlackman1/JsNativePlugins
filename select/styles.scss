@@ -64,6 +64,10 @@ $height: 46px;
   &__item {
     padding: 1em;
 
+    &.selected {
+      background-color: bisque;
+    }
+
     &:hover {
       background-color: #eee;
       cursor: pointer;

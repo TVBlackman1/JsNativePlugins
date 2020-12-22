@@ -54,6 +54,9 @@ body {
 .select__item {
   padding: 1em;
 }
+.select__item.selected {
+  background-color: bisque;
+}
 .select__item:hover {
   background-color: #eee;
   cursor: pointer;

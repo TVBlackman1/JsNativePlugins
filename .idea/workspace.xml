@@ -3,15 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="4c784ac1-0c1d-4228-8401-499f4274f18c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.cache/27/54273956904194dd6a22ec2fd1a871.json" beforeDir="false" afterPath="$PROJECT_DIR$/.cache/27/54273956904194dd6a22ec2fd1a871.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cache/2f/ac9cf3236f95ace274f3308b0bf027.json" beforeDir="false" afterPath="$PROJECT_DIR$/.cache/2f/ac9cf3236f95ace274f3308b0bf027.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.cache/3d/7cb0eb6ca6eaa4d2ead62ce0abc90e.json" beforeDir="false" afterPath="$PROJECT_DIR$/.cache/3d/7cb0eb6ca6eaa4d2ead62ce0abc90e.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.cache/b7/f716888a69bd1d750807430a9ef284.json" beforeDir="false" afterPath="$PROJECT_DIR$/.cache/b7/f716888a69bd1d750807430a9ef284.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cache/ed/f795fc9b31ad6349589a9bbe719c00.json" beforeDir="false" afterPath="$PROJECT_DIR$/.cache/ed/f795fc9b31ad6349589a9bbe719c00.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.css.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/Plugins.e31bb0bc.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/select/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/select/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/select/select.js" beforeDir="false" afterPath="$PROJECT_DIR$/select/select.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +55,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608663949158</updated>
-      <workItem from="1608663950243" duration="3596000" />
+      <workItem from="1608663950243" duration="6680000" />
     </task>
     <servers />
   </component>
