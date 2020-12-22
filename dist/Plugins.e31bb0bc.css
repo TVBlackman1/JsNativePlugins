@@ -1,3 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+body {
+  font-family: "Roboto", sans-serif;
+}
+
 .app {
   padding-top: 5em;
   display: flex;
@@ -8,8 +13,51 @@
   width: 500px;
 }
 
+.select {
+  width: 100%;
+  position: relative;
+}
+.select.open .select__dropdown {
+  display: block;
+}
+.select.open .select__input {
+  border-bottom: none;
+}
 .select__input {
-  border: 1px solid black;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 46px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+.select__dropdown {
+  display: none;
+  position: absolute;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  top: 46px;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+}
+.select__list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.select__item {
+  padding: 1em;
+}
+.select__item:hover {
+  background-color: #eee;
+  cursor: pointer;
+  transition: 150ms background-color ease-in;
 }
 
 /*# sourceMappingURL=/Plugins.e31bb0bc.css.map */
