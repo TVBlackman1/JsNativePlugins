@@ -136,11 +136,19 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 var getTemplate = function getTemplate() {
   var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var placeholder = arguments.length > 1 ? arguments[1] : undefined;
+  var selectedId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
   var text = placeholder !== null && placeholder !== void 0 ? placeholder : 'Placeholder';
   var items = data.map(function (item) {
-    return "\n            <li class=\"select__item\" data-type=\"item\" data-id=\"".concat(item.id, "\">").concat(item.value, "</li>\n        ");
+    var classes = '';
+
+    if (item.id === selectedId) {
+      text = item.value;
+      classes = 'selected';
+    }
+
+    return "\n            <li class=\"select__item ".concat(classes, "\" data-type=\"item\" data-id=\"").concat(item.id, "\">").concat(item.value, "</li>\n        ");
   });
-  return "\n        <div class=\"select__input\" data-type=\"input\">\n            <span data-type=\"placeholder-value\">".concat(text, "</span>\n            <i class=\"fa fa-chevron-down\" aria-hidden=\"true\" data-type=\"arrow\"></i>\n        </div>\n        <div class=\"select__dropdown\">\n            <ul class=\"select__list\">\n                ").concat(items.join(''), "\n            </ul>\n        </div>\n    ");
+  return "\n        <div class=\"select__backdrop\" data-type=\"backdrop\"></div>\n        <div class=\"select__input\" data-type=\"input\">\n            <span data-type=\"placeholder-value\">".concat(text, "</span>\n            <i class=\"fa fa-chevron-down\" aria-hidden=\"true\" data-type=\"arrow\"></i>\n        </div>\n        <div class=\"select__dropdown\">\n            <ul class=\"select__list\">\n                ").concat(items.join(''), "\n            </ul>\n        </div>\n    ");
 };
 
 var _render = new WeakSet();
@@ -157,7 +165,7 @@ var Select = /*#__PURE__*/function () {
 
     this.$el = document.querySelector(selector);
     this.options = options;
-    this.selectedId = null;
+    this.selectedId = options.selectedId;
 
     _classPrivateMethodGet(this, _render, _render2).call(this);
 
@@ -177,13 +185,21 @@ var Select = /*#__PURE__*/function () {
         var id = event.target.dataset.id;
         this.select(id);
       }
+
+      if (type === 'backdrop') {
+        this.close();
+      }
     }
   }, {
     key: "select",
     value: function select(id) {
       this.selectedId = id;
       this.$placeholderValue.textContent = this.current.value;
-      this.$el.querySelector();
+      console.log("[data-id=\"".concat(id, "\"]"));
+      this.$el.querySelectorAll("[data-type=\"item\"]").forEach(function (el) {
+        el.classList.remove('selected');
+      });
+      this.$el.querySelector("[data-id=\"".concat(id, "\"]")).classList.add('selected');
       this.close();
     }
   }, {
@@ -209,6 +225,7 @@ var Select = /*#__PURE__*/function () {
     key: "destroy",
     value: function destroy() {
       this.$el.removeEventListener('click', this.clickHandler);
+      this.$el.innerHTML = '';
     }
   }, {
     key: "isOpen",
@@ -236,7 +253,7 @@ var _render2 = function _render2() {
       data = _this$options.data,
       placeholder = _this$options.placeholder;
   this.$el.classList.add('select');
-  this.$el.innerHTML = getTemplate(data, placeholder);
+  this.$el.innerHTML = getTemplate(data, placeholder, this.selectedId);
 };
 
 var _setup2 = function _setup2() {
@@ -326,6 +343,7 @@ require("./select/styles.scss");
 
 var select = new _select.Select('#select', {
   placeholder: 'Выберите элемент',
+  selectedId: '2',
   data: [{
     id: '1',
     value: "first"
@@ -378,7 +396,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54349" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56766" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

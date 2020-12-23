@@ -1,12 +1,18 @@
-const getTemplate = (data = [], placeholder) => {
-    const text = placeholder ?? 'Placeholder'
+const getTemplate = (data = [], placeholder, selectedId = null) => {
+    let text = placeholder ?? 'Placeholder'
 
     const items = data.map(item => {
+        let classes = ''
+        if(item.id === selectedId) {
+            text =  item.value
+            classes = 'selected'
+        }
         return `
-            <li class="select__item" data-type="item" data-id="${item.id}">${item.value}</li>
+            <li class="select__item ${classes}" data-type="item" data-id="${item.id}">${item.value}</li>
         `
     })
     return `
+        <div class="select__backdrop" data-type="backdrop"></div>
         <div class="select__input" data-type="input">
             <span data-type="placeholder-value">${text}</span>
             <i class="fa fa-chevron-down" aria-hidden="true" data-type="arrow"></i>
@@ -23,7 +29,7 @@ export class Select {
     constructor(selector, options) {
         this.$el = document.querySelector(selector)
         this.options = options
-        this.selectedId = null
+        this.selectedId = options.selectedId
 
         this.#render()
         this.#setup()
@@ -33,7 +39,7 @@ export class Select {
     #render() {
         const { data, placeholder } = this.options
         this.$el.classList.add('select')
-        this.$el.innerHTML = getTemplate(data, placeholder)
+        this.$el.innerHTML = getTemplate(data, placeholder, this.selectedId)
     }
 
     #setup() {
@@ -52,6 +58,9 @@ export class Select {
             const id = event.target.dataset.id
             this.select(id)
         }
+        if(type === 'backdrop') {
+            this.close()
+        }
     }
 
     get isOpen() {
@@ -65,7 +74,11 @@ export class Select {
     select(id) {
         this.selectedId = id
         this.$placeholderValue.textContent = this.current.value
-        // this.$el.querySelector()
+        console.log(`[data-id="${id}"]`)
+        this.$el.querySelectorAll(`[data-type="item"]`).forEach(el => {
+            el.classList.remove('selected')
+        })
+        this.$el.querySelector(`[data-id="${id}"]`).classList.add('selected')
         this.close()
     }
 
@@ -88,5 +101,6 @@ export class Select {
 
     destroy() {
         this.$el.removeEventListener('click', this.clickHandler)
+        this.$el.innerHTML = ''
     }
 }

@@ -16,12 +16,16 @@ body {
 .select {
   width: 100%;
   position: relative;
+  z-index: 100;
 }
 .select.open .select__dropdown {
   display: block;
 }
 .select.open .select__input {
   border-bottom: none;
+}
+.select.open .select__backdrop {
+  display: block;
 }
 .select__input {
   border: 1px solid #ccc;
@@ -50,6 +54,15 @@ body {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+.select__backdrop {
+  position: fixed;
+  display: none;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
 }
 .select__item {
   padding: 1em;
