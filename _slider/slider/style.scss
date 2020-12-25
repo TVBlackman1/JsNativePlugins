@@ -1,0 +1,34 @@
+$height: 500px;
+
+div.wrap {
+  width: 500px;
+  border: 1px solid black;
+  //height: $height;
+  margin: auto;
+}
+
+div.slider {
+  width: 500px;
+  height: 300px;
+  position: relative;
+  border: 1px solid black;
+  //padding: 1em 2em;
+
+  &-content {
+    width: 100%;
+    height: 100%;
+    background-color: antiquewhite;
+    overflow: hidden;
+  }
+
+  &-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 28px;
+    background-color: brown;
+  }
+
+
+}
