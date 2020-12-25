@@ -127,12 +127,43 @@ exports.Slider = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Slider = function Slider() {
-  _classCallCheck(this, Slider);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  console.log('OnCreate');
-  this.id = null;
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Slider = /*#__PURE__*/function () {
+  function Slider() {
+    _classCallCheck(this, Slider);
+
+    console.log('OnCreate');
+    this.$el = document.querySelector('.slider');
+    this.$content = this.$el.querySelector('.slider-content'); // console.log(this.$el)
+    // this.id = null
+
+    this.addScrollHandler();
+  }
+
+  _createClass(Slider, [{
+    key: "addScrollHandler",
+    value: function addScrollHandler() {
+      var _this = this;
+
+      this.$content.addEventListener('mousewheel', function (event) {
+        if (_this.$content.doScroll) _this.$content.doScroll(event.wheelDelta > 0 ? "left" : "right");else if ((event.wheelDelta || event.detail) > 0) _this.$content.scrollLeft -= 10;else _this.$content.scrollLeft += 10;
+        return false;
+      }); // this.$content.addEventListener('scroll', function() {
+      //     console.log("scroll")
+      //     // document.getElementById('showScroll').innerHTML = pageYOffset + 'px';
+      // });
+      // this.$content.addEventListener('click', function() {
+      //     console.log("click")
+      //     // document.getElementById('showScroll').innerHTML = pageYOffset + 'px';
+      // });
+    }
+  }]);
+
+  return Slider;
+}();
 
 exports.Slider = Slider;
 },{}],"index.js":[function(require,module,exports) {
@@ -169,7 +200,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58748" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63685" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
