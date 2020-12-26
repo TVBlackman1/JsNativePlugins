@@ -8,6 +8,9 @@ export class ScrollAnimator {
         this.$scrollableElement = $scrollableElement
         this.animatedInMoment = false
         this.funcsOnScrollEnd = []
+        this.subscribeOnScrollEnd(()=>{
+            console.log("end")
+        })
     }
 
     get animated() {
@@ -15,7 +18,7 @@ export class ScrollAnimator {
     }
 
     subscribeOnScrollEnd(func) {
-        this.funcsOnScrollEnd.add(func)
+        this.funcsOnScrollEnd.push(func)
     }
 
     #notifyOnScrollEnd() {
@@ -29,34 +32,11 @@ export class ScrollAnimator {
         if(this.animated || difference === 0)
             return
         this.animate(difference)
-        // time in ms
-        // const duration = 400
-        // const intervalDelay = 15
-        // const times = duration / intervalDelay
-        // this.animatedInMoment = true
-        //
-        // const start = this.$scrollableElement.scrollLeft
-        // const end = start + difference
-        // const dx = difference / times
-        //
-        // const interval = setInterval(()=> {
-        //     this.$scrollableElement.scrollLeft += dx
-        // }, intervalDelay)
-        //
-        // new Promise(() => {
-        //     setTimeout(()=> {
-        //         clearInterval(interval)
-        //         this.$scrollableElement.scrollLeft = end
-        //         this.animatedInMoment = false
-        //     }, duration)
-        // }).then(() => {
-        //     this.#notifyOnScrollEnd()
-        // })
     }
 
     animate(difference) {
-        const duration = 2400
-        const intervalDelay = 15
+        const duration = 600
+        const intervalDelay = 10
         const times = duration / intervalDelay
         this.animatedInMoment = true
 
@@ -68,18 +48,16 @@ export class ScrollAnimator {
         const interval = setInterval(()=> {
             currentOffset += linearDx
             let piece = currentOffset / difference
-            this.$scrollableElement.scrollLeft = start + this.quad(piece) * difference
+            this.$scrollableElement.scrollLeft = start + this.easyEasy(piece) * difference
+            // console.log(this.$scrollableElement.scrollLeft)
         }, intervalDelay)
 
-        new Promise(() => {
-            setTimeout(()=> {
-                clearInterval(interval)
-                this.$scrollableElement.scrollLeft = end
-                this.animatedInMoment = false
-            }, duration)
-        }).then(() => {
+        setTimeout(()=> {
+            clearInterval(interval)
+            this.$scrollableElement.scrollLeft = end
+            this.animatedInMoment = false
             this.#notifyOnScrollEnd()
-        })
+        }, duration)
 
     }
 
@@ -93,6 +71,21 @@ export class ScrollAnimator {
             return Math.pow(x, 5)
         }
         const maxFuncX = 15
+        const maxFuncY = func(maxFuncX)
+        const x = piece * maxFuncX
+        return func(x) / maxFuncY // 0 -- 1
+    }
+
+    /**
+     *
+     * @param {number} piece values: [0, 1], float
+     * @returns {number}
+     */
+    easyEasy(piece) {
+        const func = (x) => {
+            return 1 / (1 + Math.pow(2.7, 5-x))
+        }
+        const maxFuncX = 10
         const maxFuncY = func(maxFuncX)
         const x = piece * maxFuncX
         return func(x) / maxFuncY // 0 -- 1

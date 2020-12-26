@@ -862,48 +862,29 @@ var ScrollAnimator = /*#__PURE__*/function () {
     this.$scrollableElement = $scrollableElement;
     this.animatedInMoment = false;
     this.funcsOnScrollEnd = [];
+    this.subscribeOnScrollEnd(function () {
+      console.log("end");
+    });
   }
 
   _createClass(ScrollAnimator, [{
     key: "subscribeOnScrollEnd",
     value: function subscribeOnScrollEnd(func) {
-      this.funcsOnScrollEnd.add(func);
+      this.funcsOnScrollEnd.push(func);
     }
   }, {
     key: "scrollShift",
     value: function scrollShift(difference) {
       if (this.animated || difference === 0) return;
-      this.animate(difference); // time in ms
-      // const duration = 400
-      // const intervalDelay = 15
-      // const times = duration / intervalDelay
-      // this.animatedInMoment = true
-      //
-      // const start = this.$scrollableElement.scrollLeft
-      // const end = start + difference
-      // const dx = difference / times
-      //
-      // const interval = setInterval(()=> {
-      //     this.$scrollableElement.scrollLeft += dx
-      // }, intervalDelay)
-      //
-      // new Promise(() => {
-      //     setTimeout(()=> {
-      //         clearInterval(interval)
-      //         this.$scrollableElement.scrollLeft = end
-      //         this.animatedInMoment = false
-      //     }, duration)
-      // }).then(() => {
-      //     this.#notifyOnScrollEnd()
-      // })
+      this.animate(difference);
     }
   }, {
     key: "animate",
     value: function animate(difference) {
       var _this = this;
 
-      var duration = 2400;
-      var intervalDelay = 15;
+      var duration = 600;
+      var intervalDelay = 10;
       var times = duration / intervalDelay;
       this.animatedInMoment = true;
       var start = this.$scrollableElement.scrollLeft;
@@ -913,17 +894,15 @@ var ScrollAnimator = /*#__PURE__*/function () {
       var interval = setInterval(function () {
         currentOffset += linearDx;
         var piece = currentOffset / difference;
-        _this.$scrollableElement.scrollLeft = start + _this.quad(piece) * difference;
+        _this.$scrollableElement.scrollLeft = start + _this.easyEasy(piece) * difference; // console.log(this.$scrollableElement.scrollLeft)
       }, intervalDelay);
-      new Promise(function () {
-        setTimeout(function () {
-          clearInterval(interval);
-          _this.$scrollableElement.scrollLeft = end;
-          _this.animatedInMoment = false;
-        }, duration);
-      }).then(function () {
+      setTimeout(function () {
+        clearInterval(interval);
+        _this.$scrollableElement.scrollLeft = end;
+        _this.animatedInMoment = false;
+
         _classPrivateMethodGet(_this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(_this);
-      });
+      }, duration);
     }
     /**
      *
@@ -939,6 +918,24 @@ var ScrollAnimator = /*#__PURE__*/function () {
       };
 
       var maxFuncX = 15;
+      var maxFuncY = func(maxFuncX);
+      var x = piece * maxFuncX;
+      return func(x) / maxFuncY; // 0 -- 1
+    }
+    /**
+     *
+     * @param {number} piece values: [0, 1], float
+     * @returns {number}
+     */
+
+  }, {
+    key: "easyEasy",
+    value: function easyEasy(piece) {
+      var func = function func(x) {
+        return 1 / (1 + Math.pow(2.7, 5 - x));
+      };
+
+      var maxFuncX = 10;
       var maxFuncY = func(maxFuncX);
       var x = piece * maxFuncX;
       return func(x) / maxFuncY; // 0 -- 1
@@ -1022,13 +1019,9 @@ var Slider = /*#__PURE__*/function () {
       var newContentElement = this.$contentElems[newIndex];
       var leftOfNewElement = newContentElement.getBoundingClientRect().left;
       var xShift = leftOfNewElement - leftOfCurrent;
-      console.log(xShift); // this.$content.scrollLeft += xShift;
-
+      console.log(xShift);
       this.scrollAnimator.scrollShift(xShift);
-      this.index = newIndex; // console.log(leftOfCurrent)
-      // const xShift = (newIndex - this.index) * 500
-      // // this.$content.scrollLeft += xShift;
-      // scrollTo(this.$content.scrollLeft, this.$content.scrollLeft + xShift)
+      this.index = newIndex;
     }
   }]);
 
@@ -1071,7 +1064,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55634" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57777" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

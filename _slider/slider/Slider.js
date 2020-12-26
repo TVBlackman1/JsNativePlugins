@@ -43,15 +43,8 @@ export class Slider {
 
         const xShift = leftOfNewElement - leftOfCurrent
         console.log(xShift)
-        // this.$content.scrollLeft += xShift;
         this.scrollAnimator.scrollShift(xShift)
 
         this.index = newIndex
-
-
-        // console.log(leftOfCurrent)
-        // const xShift = (newIndex - this.index) * 500
-        // // this.$content.scrollLeft += xShift;
-        // scrollTo(this.$content.scrollLeft, this.$content.scrollLeft + xShift)
     }
 }
