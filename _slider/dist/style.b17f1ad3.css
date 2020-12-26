@@ -30,9 +30,9 @@ div.wrap {
 .slider-content-li {
   list-style: none;
   display: block;
-  flex: 0 0 500px;
+  min-width: 500px;
   background-color: #eeeeee;
-  margin: 0 12px;
+  margin: 0;
 }
 .slider-menu {
   position: absolute;

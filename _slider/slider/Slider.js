@@ -1,33 +1,42 @@
-const scrollTo = require('scroll-to')
 const { ScrollAnimator } = require('./ScrollAnimator')
 
 export class Slider {
-    constructor() {
-        console.log('OnCreate')
-        this.$el = document.querySelector('.slider')
+    /**
+     *
+     * @param {object} settings
+     */
+    constructor(settings= {}) {
+        this.$el = document.querySelector(settings.selector)
         this.$content = this.$el.querySelector('.slider-content')
         this.$contentElems = this.$content.querySelectorAll('.slider-content-li')
-        this.scrollAnimator = new ScrollAnimator(this.$content)
-        // console.log(this.$el)
-        this.index = 0
-        this.addScrollHandler()
 
+        this.scrollAnimator = new ScrollAnimator(this.$content, {
+            animationName: settings.animationName,
+            animationDuration: settings.animationDuration
+        })
+
+        this.scrollImmediately = new ScrollAnimator(this.$content, {
+            animationDuration: 0
+        })
+
+        this.index = 0
+        this.index = settings.numberOfStartElement ?? 0
+
+        this.#setup()
     }
 
     addScrollHandler() {
         this.$content.addEventListener('mousewheel', (event) => {
-            // if (this.$content.doScroll)
-            //     this.$content.doScroll(event.wheelDelta>0?"left":"right");
-            // else if ((event.wheelDelta || event.detail) > 0)
-            //     this.$content.scrollLeft -= 10;
-            // else
-            //     this.$content.scrollLeft += 10;
-
             // 1 - next, -1 - previous
             const shiftContentCoefficient = event.wheelDelta < 0 ? 1 : -1
-            console.log(shiftContentCoefficient)
+
+            this.goToContentWithIndex(this.index + shiftContentCoefficient)
             return false;
         })
+    }
+
+    #setup() {
+        this.addScrollHandler()
     }
 
     /**
@@ -35,6 +44,11 @@ export class Slider {
      * @param {number} newIndex - index of element. Starts with 0
      */
     goToContentWithIndex(newIndex) {
+        if(newIndex < 0 || newIndex >= this.$contentElems.length)
+            return
+
+        if(this.scrollAnimator.animated)
+            return
         const currentContentElement = this.$contentElems[this.index]
         const leftOfCurrent = currentContentElement.getBoundingClientRect().left
 
@@ -42,7 +56,7 @@ export class Slider {
         const leftOfNewElement = newContentElement.getBoundingClientRect().left
 
         const xShift = leftOfNewElement - leftOfCurrent
-        console.log(xShift)
+
         this.scrollAnimator.scrollShift(xShift)
 
         this.index = newIndex

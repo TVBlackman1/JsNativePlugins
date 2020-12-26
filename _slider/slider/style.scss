@@ -38,10 +38,10 @@ div.wrap {
     &-li {
       list-style: none;
       display: block;
-      flex: 0 0 $width;
-      //min-width: $width;
+      //flex: 0 0 $width;
+      min-width: $width;
       background-color: #eeeeee;
-      margin: 0 12px;
+      margin: 0;
     }
   }
 
@@ -53,6 +53,4 @@ div.wrap {
     height: 28px;
     background-color: brown;
   }
-
-
 }

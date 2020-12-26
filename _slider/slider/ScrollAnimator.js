@@ -1,9 +1,13 @@
+import {Animator} from "./Animator";
+
+
 export class ScrollAnimator {
     /**
      *
-     * @param $scrollableElement
+     * @param $scrollableElement - DOM object like div, ul, etc.
+     * @param {Object} settings - settings of animator.
      */
-    constructor($scrollableElement) {
+    constructor($scrollableElement, settings = {}) {
         console.log("Created scroll animator")
         this.$scrollableElement = $scrollableElement
         this.animatedInMoment = false
@@ -11,6 +15,12 @@ export class ScrollAnimator {
         this.subscribeOnScrollEnd(()=>{
             console.log("end")
         })
+
+        const animationName = settings.animationName ?? "linear"
+        this.animationFunction = Animator().getAnimationFunction(animationName)
+
+        this.animationDuration = settings.animationDuration ?? 600
+
     }
 
     get animated() {
@@ -31,11 +41,11 @@ export class ScrollAnimator {
     scrollShift(difference) {
         if(this.animated || difference === 0)
             return
-        this.animate(difference)
+        this.animateShift(difference)
     }
 
-    animate(difference) {
-        const duration = 600
+    animateShift(difference) {
+        const duration = this.animationDuration
         const intervalDelay = 10
         const times = duration / intervalDelay
         this.animatedInMoment = true
@@ -48,8 +58,7 @@ export class ScrollAnimator {
         const interval = setInterval(()=> {
             currentOffset += linearDx
             let piece = currentOffset / difference
-            this.$scrollableElement.scrollLeft = start + this.easyEasy(piece) * difference
-            // console.log(this.$scrollableElement.scrollLeft)
+            this.$scrollableElement.scrollLeft = start + this.animationFunction(piece) * difference
         }, intervalDelay)
 
         setTimeout(()=> {
@@ -59,36 +68,6 @@ export class ScrollAnimator {
             this.#notifyOnScrollEnd()
         }, duration)
 
-    }
-
-    /**
-     *
-     * @param {number} piece values: [0, 1], float
-     * @returns {number}
-     */
-    quad(piece) {
-        const func = (x) => {
-            return Math.pow(x, 5)
-        }
-        const maxFuncX = 15
-        const maxFuncY = func(maxFuncX)
-        const x = piece * maxFuncX
-        return func(x) / maxFuncY // 0 -- 1
-    }
-
-    /**
-     *
-     * @param {number} piece values: [0, 1], float
-     * @returns {number}
-     */
-    easyEasy(piece) {
-        const func = (x) => {
-            return 1 / (1 + Math.pow(2.7, 5-x))
-        }
-        const maxFuncX = 10
-        const maxFuncY = func(maxFuncX)
-        const x = piece * maxFuncX
-        return func(x) / maxFuncY // 0 -- 1
     }
 
 
