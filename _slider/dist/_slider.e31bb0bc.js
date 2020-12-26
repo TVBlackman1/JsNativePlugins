@@ -872,19 +872,48 @@ var ScrollAnimator = /*#__PURE__*/function () {
   }, {
     key: "scrollShift",
     value: function scrollShift(difference) {
+      if (this.animated || difference === 0) return;
+      this.animate(difference); // time in ms
+      // const duration = 400
+      // const intervalDelay = 15
+      // const times = duration / intervalDelay
+      // this.animatedInMoment = true
+      //
+      // const start = this.$scrollableElement.scrollLeft
+      // const end = start + difference
+      // const dx = difference / times
+      //
+      // const interval = setInterval(()=> {
+      //     this.$scrollableElement.scrollLeft += dx
+      // }, intervalDelay)
+      //
+      // new Promise(() => {
+      //     setTimeout(()=> {
+      //         clearInterval(interval)
+      //         this.$scrollableElement.scrollLeft = end
+      //         this.animatedInMoment = false
+      //     }, duration)
+      // }).then(() => {
+      //     this.#notifyOnScrollEnd()
+      // })
+    }
+  }, {
+    key: "animate",
+    value: function animate(difference) {
       var _this = this;
 
-      if (difference === 0) return; // time in ms
-
-      var duration = 400;
+      var duration = 2400;
       var intervalDelay = 15;
       var times = duration / intervalDelay;
       this.animatedInMoment = true;
       var start = this.$scrollableElement.scrollLeft;
       var end = start + difference;
-      var dx = difference / times;
+      var linearDx = difference / times;
+      var currentOffset = 0;
       var interval = setInterval(function () {
-        _this.$scrollableElement.scrollLeft += dx;
+        currentOffset += linearDx;
+        var piece = currentOffset / difference;
+        _this.$scrollableElement.scrollLeft = start + _this.quad(piece) * difference;
       }, intervalDelay);
       new Promise(function () {
         setTimeout(function () {
@@ -895,6 +924,24 @@ var ScrollAnimator = /*#__PURE__*/function () {
       }).then(function () {
         _classPrivateMethodGet(_this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(_this);
       });
+    }
+    /**
+     *
+     * @param {number} piece values: [0, 1], float
+     * @returns {number}
+     */
+
+  }, {
+    key: "quad",
+    value: function quad(piece) {
+      var func = function func(x) {
+        return Math.pow(x, 5);
+      };
+
+      var maxFuncX = 15;
+      var maxFuncY = func(maxFuncX);
+      var x = piece * maxFuncX;
+      return func(x) / maxFuncY; // 0 -- 1
     }
   }, {
     key: "animated",
@@ -1024,7 +1071,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53253" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55634" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
