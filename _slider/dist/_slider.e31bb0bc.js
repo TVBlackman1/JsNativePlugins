@@ -228,12 +228,21 @@ var Animator = function Animator() {
     },
     maxFuncX: 5
   };
+  var first = {
+    name: 'first',
+    func: function func(x) {
+      x -= 4;
+      return Math.pow(1 + 1 / Math.pow(2.17, x), Math.pow(2.17, x)) - 1;
+    },
+    maxFuncX: 8
+  };
   addMathFunction(quad);
   addMathFunction(easyEasy);
   addMathFunction(linear);
   addMathFunction(mikhailFunc);
   addMathFunction(daniilFunc);
   addMathFunction(paral);
+  addMathFunction(first);
   return {
     getAnimationFunction: getAnimationFunction,
     addMathFunction: addMathFunction
