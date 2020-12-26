@@ -206,9 +206,34 @@ var Animator = function Animator() {
     },
     maxFuncX: 15
   };
+  var mikhailFunc = {
+    name: 'mikhail-func',
+    func: function func(x) {
+      return Math.atan(x - 2) * Math.pow(x, 2) / 3 * 4;
+    },
+    maxFuncX: 4
+  };
+  var daniilFunc = {
+    name: 'daniil-func',
+    func: function func(x) {
+      x -= 20;
+      return (2.7 + Math.sin(2.7 * x) / x) * Math.pow(2.7, 2) * (2.7 / (2.7 + Math.pow(2.7, -x * 2.7)));
+    },
+    maxFuncX: 35
+  };
+  var paral = {
+    name: 'paral',
+    func: function func(x) {
+      return Math.sin(2.7 * x) * x + x;
+    },
+    maxFuncX: 5
+  };
   addMathFunction(quad);
   addMathFunction(easyEasy);
   addMathFunction(linear);
+  addMathFunction(mikhailFunc);
+  addMathFunction(daniilFunc);
+  addMathFunction(paral);
   return {
     getAnimationFunction: getAnimationFunction,
     addMathFunction: addMathFunction
@@ -251,7 +276,6 @@ var ScrollAnimator = /*#__PURE__*/function () {
 
     _notifyOnScrollEnd.add(this);
 
-    console.log("Created scroll animator");
     this.$scrollableElement = $scrollableElement;
     this.animatedInMoment = false;
     this.funcsOnScrollEnd = [];
@@ -289,8 +313,12 @@ var ScrollAnimator = /*#__PURE__*/function () {
       var currentOffset = 0;
       var interval = setInterval(function () {
         currentOffset += linearDx;
-        var piece = currentOffset / difference;
-        _this.$scrollableElement.scrollLeft = start + _this.animationFunction(piece) * difference;
+        var piece = currentOffset / difference; // values from 0 to 1
+
+        var relativePosCoefficient = _this.animationFunction(piece); // values from 0 to 1
+
+
+        _this.$scrollableElement.scrollLeft = start + relativePosCoefficient * difference;
       }, intervalDelay);
       setTimeout(function () {
         clearInterval(interval);
@@ -419,7 +447,7 @@ var slider = new _Slider.Slider({
   selector: '.slider',
   numberOfStartElement: 0,
   animationName: 'easy-easy',
-  animationDuration: 200
+  animationDuration: 300
 });
 window.s = slider;
 },{"./slider/Slider":"slider/Slider.js"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -450,7 +478,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62051" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64491" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

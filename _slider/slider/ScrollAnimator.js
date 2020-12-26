@@ -8,7 +8,6 @@ export class ScrollAnimator {
      * @param {Object} settings - settings of animator.
      */
     constructor($scrollableElement, settings = {}) {
-        console.log("Created scroll animator")
         this.$scrollableElement = $scrollableElement
         this.animatedInMoment = false
         this.funcsOnScrollEnd = []
@@ -57,8 +56,9 @@ export class ScrollAnimator {
 
         const interval = setInterval(()=> {
             currentOffset += linearDx
-            let piece = currentOffset / difference
-            this.$scrollableElement.scrollLeft = start + this.animationFunction(piece) * difference
+            let piece = currentOffset / difference // values from 0 to 1
+            let relativePosCoefficient = this.animationFunction(piece) // values from 0 to 1
+            this.$scrollableElement.scrollLeft = start + relativePosCoefficient * difference
         }, intervalDelay)
 
         setTimeout(()=> {

@@ -86,9 +86,37 @@ export const Animator = () => {
         maxFuncX: 15
     }
 
+    const mikhailFunc = {
+        name: 'mikhail-func',
+        func: (x) => {
+            return Math.atan(x-2)*x**2/3*4
+        },
+        maxFuncX: 4
+    }
+
+    const daniilFunc = {
+        name: 'daniil-func',
+        func: (x) => {
+            x -= 20
+            return (2.7 + Math.sin(2.7*x)/x) * 2.7**2*(2.7/(2.7 + Math.pow(2.7, -x*2.7)))
+        },
+        maxFuncX: 35
+    }
+
+    const paral = {
+        name: 'paral',
+        func: (x) => {
+            return Math.sin(2.7*x)*x+x
+        },
+        maxFuncX: 5
+    }
+
     addMathFunction(quad)
     addMathFunction(easyEasy)
     addMathFunction(linear)
+    addMathFunction(mikhailFunc)
+    addMathFunction(daniilFunc)
+    addMathFunction(paral)
 
     return {
         getAnimationFunction,

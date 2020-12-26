@@ -42,6 +42,10 @@ div.wrap {
       min-width: $width;
       background-color: #eeeeee;
       margin: 0;
+      padding: 0;
+      background-position: center;
+      background-origin: content-box;
+      background-size: cover;
     }
   }
 
