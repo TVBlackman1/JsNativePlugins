@@ -160,7 +160,13 @@ var Animator = function Animator() {
   }
 
   function getAnimationFunction(funcName) {
-    return getDecoratedFunction(funcName);
+    try {
+      return getDecoratedFunction(funcName);
+    } catch (e) {
+      // name not exist in animator
+      console.log("Not correct name of animation.");
+      return null;
+    }
   }
 
   getAnimationFunction = getAnimationFunction.bind(_this);
@@ -236,6 +242,24 @@ var Animator = function Animator() {
     },
     maxFuncX: 8
   };
+  var lags = {
+    name: 'lags',
+    func: function func(x) {
+      var a = Math.sin(x / 12) + 0.99;
+      var b = 12 * a / Math.abs(a);
+      b += 20 * Math.log(x) + Math.sign(Math.sin(x));
+      return b;
+    },
+    maxFuncX: 300
+  };
+  var andrey = {
+    name: 'andrey',
+    func: function func(x) {
+      x += 0.1;
+      return 1 / x / Math.cos(Math.round(x)) + Math.sqrt(Math.abs(x));
+    },
+    maxFuncX: 100
+  };
   addMathFunction(quad);
   addMathFunction(easyEasy);
   addMathFunction(linear);
@@ -243,6 +267,8 @@ var Animator = function Animator() {
   addMathFunction(daniilFunc);
   addMathFunction(paral);
   addMathFunction(first);
+  addMathFunction(lags);
+  addMathFunction(andrey);
   return {
     getAnimationFunction: getAnimationFunction,
     addMathFunction: addMathFunction
@@ -268,6 +294,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
 
+var defaultAnimationName = 'linear';
+var defaultAnimationDuration = 600;
+
 var _notifyOnScrollEnd = new WeakSet();
 
 var ScrollAnimator = /*#__PURE__*/function () {
@@ -291,9 +320,15 @@ var ScrollAnimator = /*#__PURE__*/function () {
     this.subscribeOnScrollEnd(function () {
       console.log("end");
     });
-    var animationName = (_settings$animationNa = settings.animationName) !== null && _settings$animationNa !== void 0 ? _settings$animationNa : "linear";
+    var animationName = (_settings$animationNa = settings.animationName) !== null && _settings$animationNa !== void 0 ? _settings$animationNa : defaultAnimationName;
     this.animationFunction = (0, _Animator.Animator)().getAnimationFunction(animationName);
-    this.animationDuration = (_settings$animationDu = settings.animationDuration) !== null && _settings$animationDu !== void 0 ? _settings$animationDu : 600;
+
+    if (!this.animationFunction) {
+      // name not exist in animator
+      this.animationFunction = (0, _Animator.Animator)().getAnimationFunction(defaultAnimationName);
+    }
+
+    this.animationDuration = (_settings$animationDu = settings.animationDuration) !== null && _settings$animationDu !== void 0 ? _settings$animationDu : defaultAnimationDuration;
   }
 
   _createClass(ScrollAnimator, [{
@@ -392,6 +427,8 @@ var Slider = /*#__PURE__*/function () {
     this.$el = document.querySelector(settings.selector);
     this.$content = this.$el.querySelector('.slider-content');
     this.$contentElems = this.$content.querySelectorAll('.slider-content-li');
+    this.$menu = this.$el.querySelector('.slider-menu');
+    this.$menuElems = this.$menu.querySelectorAll('.slider-menu-elem');
     this.scrollAnimator = new ScrollAnimator(this.$content, {
       animationName: settings.animationName,
       animationDuration: settings.animationDuration
@@ -436,6 +473,15 @@ var Slider = /*#__PURE__*/function () {
       var xShift = leftOfNewElement - leftOfCurrent;
       this.scrollAnimator.scrollShift(xShift);
       this.index = newIndex;
+      this.updateMenuCurrentView();
+    }
+  }, {
+    key: "updateMenuCurrentView",
+    value: function updateMenuCurrentView() {
+      this.$menuElems.forEach(function ($el) {
+        $el.classList.remove('active');
+      });
+      this.$menuElems[this.index].classList.add('active');
     }
   }]);
 
@@ -456,7 +502,7 @@ var slider = new _Slider.Slider({
   selector: '.slider',
   numberOfStartElement: 0,
   animationName: 'easy-easy',
-  animationDuration: 300
+  animationDuration: 400
 });
 window.s = slider;
 },{"./slider/Slider":"slider/Slider.js"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -487,7 +533,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64491" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50295" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

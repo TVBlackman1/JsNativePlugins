@@ -1,5 +1,7 @@
 import {Animator} from "./Animator";
 
+const defaultAnimationName = 'linear'
+const defaultAnimationDuration = 600
 
 export class ScrollAnimator {
     /**
@@ -15,10 +17,14 @@ export class ScrollAnimator {
             console.log("end")
         })
 
-        const animationName = settings.animationName ?? "linear"
+        const animationName = settings.animationName ?? defaultAnimationName
         this.animationFunction = Animator().getAnimationFunction(animationName)
+        if (!this.animationFunction) {
+            // name not exist in animator
+            this.animationFunction = Animator().getAnimationFunction(defaultAnimationName)
+        }
 
-        this.animationDuration = settings.animationDuration ?? 600
+        this.animationDuration = settings.animationDuration ?? defaultAnimationDuration
 
     }
 

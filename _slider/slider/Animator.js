@@ -33,7 +33,13 @@ export const Animator = () => {
     }
 
     function getAnimationFunction(funcName) {
-        return getDecoratedFunction(funcName)
+        try {
+            return getDecoratedFunction(funcName)
+        } catch (e) {
+            // name not exist in animator
+            console.log("Not correct name of animation.")
+            return null
+        }
     }
     getAnimationFunction = getAnimationFunction.bind(this)
 
@@ -120,6 +126,28 @@ export const Animator = () => {
         maxFuncX: 8
     }
 
+    const lags = {
+        name: 'lags',
+        func: (x) => {
+            const a = Math.sin(x/12) + 0.99
+            let b = 12 * a / Math.abs(a)
+            b += 20*Math.log(x) + Math.sign(Math.sin(x))
+
+            return b
+        },
+        maxFuncX: 300
+    }
+
+    const andrey = {
+        name: 'andrey',
+        func: (x) => {
+            x+=0.1
+            return 1/x/Math.cos(Math.round(x))+Math.sqrt(Math.abs(x))
+        },
+        maxFuncX: 100
+    }
+
+
     addMathFunction(quad)
     addMathFunction(easyEasy)
     addMathFunction(linear)
@@ -127,6 +155,8 @@ export const Animator = () => {
     addMathFunction(daniilFunc)
     addMathFunction(paral)
     addMathFunction(first)
+    addMathFunction(lags)
+    addMathFunction(andrey)
 
     return {
         getAnimationFunction,

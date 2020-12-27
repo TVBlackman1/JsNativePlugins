@@ -7,8 +7,12 @@ export class Slider {
      */
     constructor(settings= {}) {
         this.$el = document.querySelector(settings.selector)
+
         this.$content = this.$el.querySelector('.slider-content')
         this.$contentElems = this.$content.querySelectorAll('.slider-content-li')
+
+        this.$menu = this.$el.querySelector('.slider-menu')
+        this.$menuElems = this.$menu.querySelectorAll('.slider-menu-elem')
 
         this.scrollAnimator = new ScrollAnimator(this.$content, {
             animationName: settings.animationName,
@@ -60,5 +64,13 @@ export class Slider {
         this.scrollAnimator.scrollShift(xShift)
 
         this.index = newIndex
+        this.updateMenuCurrentView()
+    }
+
+    updateMenuCurrentView() {
+        this.$menuElems.forEach(($el) => {
+            $el.classList.remove('active')
+        })
+        this.$menuElems[this.index].classList.add('active')
     }
 }
