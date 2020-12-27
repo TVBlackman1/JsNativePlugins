@@ -25,20 +25,9 @@ div.wrap {
     padding: 0 0;
     height: 100%;
     background-color: antiquewhite;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden; // i fuck it
     box-sizing: border-box;
-
-    &::-webkit-scrollbar {
-      width: 0;
-    }
-
-    * , *:before, *:after{
-      box-sizing:border-box;
-      -moz-box-sizing:border-box;
-      -webkit-box-sizing:border-box;
-      -ms-box-sizing:border-box;
-    }
 
     &-ul {
       color: red;
@@ -73,7 +62,7 @@ div.wrap {
     right: 0;
     height: 28px;
     //background-color: transparent;
-    background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(44,51,55,0.8) 23%, rgba(0,212,255,0.1) 100%);
+    //background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(44,51,55,0.8) 23%, rgba(0,212,255,0.1) 100%);
     display: flex;
     flex-direction: row;
     justify-content: center;

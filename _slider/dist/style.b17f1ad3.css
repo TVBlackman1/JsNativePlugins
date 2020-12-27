@@ -18,18 +18,9 @@ div.wrap {
   padding: 0 0;
   height: 100%;
   background-color: antiquewhite;
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
   box-sizing: border-box;
-}
-.slider-content::-webkit-scrollbar {
-  width: 0;
-}
-.slider-content *, .slider-content *:before, .slider-content *:after {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
 }
 .slider-content-ul {
   color: red;
@@ -58,7 +49,6 @@ div.wrap {
   left: 0;
   right: 0;
   height: 28px;
-  background: linear-gradient(0deg, #020024 0%, rgba(44, 51, 55, 0.8) 23%, rgba(0, 212, 255, 0.1) 100%);
   display: flex;
   flex-direction: row;
   justify-content: center;

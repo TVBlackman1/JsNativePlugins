@@ -464,7 +464,12 @@ var Slider = /*#__PURE__*/function () {
      * @param {number} newIndex - index of element. Starts with 0
      */
     value: function goToContentWithIndex(newIndex) {
-      if (newIndex < 0 || newIndex >= this.$contentElems.length) return;
+      if (newIndex < 0) {
+        newIndex = this.$contentElems.length - 1;
+      } else if (newIndex >= this.$contentElems.length) {
+        newIndex = 0;
+      }
+
       if (this.scrollAnimator.animated) return;
       var currentContentElement = this.$contentElems[this.index];
       var leftOfCurrent = currentContentElement.getBoundingClientRect().left;

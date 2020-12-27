@@ -48,11 +48,16 @@ export class Slider {
      * @param {number} newIndex - index of element. Starts with 0
      */
     goToContentWithIndex(newIndex) {
-        if(newIndex < 0 || newIndex >= this.$contentElems.length)
-            return
+
+        if(newIndex < 0) {
+            newIndex =  this.$contentElems.length - 1
+        } else if (newIndex >= this.$contentElems.length) {
+            newIndex = 0
+        }
 
         if(this.scrollAnimator.animated)
             return
+
         const currentContentElement = this.$contentElems[this.index]
         const leftOfCurrent = currentContentElement.getBoundingClientRect().left
 
