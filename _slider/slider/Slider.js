@@ -1,4 +1,5 @@
 const { ScrollAnimator } = require('./ScrollAnimator')
+const { handleTemplate } = require('./template')
 
 const defaultAutoScrollDelay = 2400
 const defaultAutoScroll = false
@@ -16,10 +17,11 @@ export class Slider {
      */
     constructor(settings= {}) {
         this.$el = document.querySelector(settings.selector)
+        handleTemplate(this.$el)
+        // this.$el = document.querySelector(settings.selector)
 
         this.$content = this.$el.querySelector('.slider-content')
         this.$contentElems = this.$content.querySelectorAll('.slider-content-li')
-
         this.$nav = this.$el.querySelector('.slider-nav')
         this.$navElems = this.$nav.querySelectorAll('.slider-nav-elem')
 
@@ -30,14 +32,15 @@ export class Slider {
         })
 
         this.scrollImmediately = new ScrollAnimator(this.$content, {
-            animationDuration: 0
+            animationDuration: 0,
+            onEnd: this.#notifyOnScrollEnd.bind(this)
         })
 
         this.autoScrollDelay = settings.autoScrollDelay ?? defaultAutoScrollDelay
         this.autoScroll = settings.autoScroll ?? defaultAutoScroll
 
-        this.index = 0
-        this.$currentContent = this.$contentElems[this.index]
+        this.#changeCurrentContent(0)
+
         this.funcsOnScrollEnd = []
 
         this.#setup()

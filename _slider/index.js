@@ -4,7 +4,7 @@ const slider = new Slider({
     selector: '.slider',
     animationName: 'easy-easy',
     animationDuration: 300,
-    autoScroll: true,
+    autoScroll: false,
     autoScrollDelay: 2400,
 })
 window.s = slider
@@ -12,7 +12,6 @@ window.s = slider
 const $effected = document.querySelector('.effected')
 
 slider.subscribeOnScrollEnd((index) => {
-    console.log(index)
     $effected.style.backgroundImage = slider.$getCurrentContent.style.backgroundImage
 
 })

@@ -398,7 +398,62 @@ var ScrollAnimator = /*#__PURE__*/function () {
 }();
 
 exports.ScrollAnimator = ScrollAnimator;
-},{"./Animator":"slider/Animator.js"}],"slider/Slider.js":[function(require,module,exports) {
+},{"./Animator":"slider/Animator.js"}],"slider/template.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleTemplate = handleTemplate;
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function handleTemplate(template) {
+  var _$ul$classList;
+
+  var $templateInner = template.innerHTML;
+  template.innerHTML = '<div class="slider-content"></div>';
+  var $content = template.querySelector('.slider-content');
+  $content.innerHTML = $templateInner;
+  var $ul = $content.querySelector('ul');
+
+  (_$ul$classList = $ul.classList).remove.apply(_$ul$classList, _toConsumableArray($ul.classList));
+
+  $ul.classList.add('slider-content-ul');
+  var $contentElems = $content.querySelectorAll('li');
+  $contentElems.forEach(function ($li) {
+    var _$li$classList;
+
+    (_$li$classList = $li.classList).remove.apply(_$li$classList, _toConsumableArray($li.classList));
+
+    $li.classList.add('slider-content-li');
+  });
+  addNavigation(template, $contentElems.length);
+}
+
+function addNavigation(template, count) {
+  var templateHtml = '<div class="slider-nav">';
+
+  for (var i = 0; i < count; i++) {
+    templateHtml += '<div class="slider-nav-elem"></div>';
+  }
+
+  templateHtml += '</div>';
+  template.innerHTML += templateHtml;
+}
+
+function editList(template) {}
+},{}],"slider/Slider.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -416,6 +471,9 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 
 var _require = require('./ScrollAnimator'),
     ScrollAnimator = _require.ScrollAnimator;
+
+var _require2 = require('./template'),
+    handleTemplate = _require2.handleTemplate;
 
 var defaultAutoScrollDelay = 2400;
 var defaultAutoScroll = false;
@@ -439,11 +497,11 @@ var Slider = /*#__PURE__*/function () {
    *
    * @param {object} settings
    * settings can have following parameters:
-   * -> {String} selector - required parameter. It is html selector for slider.
-   * -> {String} animationName - name of animations. List of available in comments at Animator.js
-   * -> {number} animationDuration - duration of animation. Gets time in ms.
-   * -> {boolean} autoScroll - true, if auto scroll is on.
-   * -> {number} autoScrollDelay - delay before auto scroll.
+   * -> {String} settings.selector - required parameter. It is html selector for slider.
+   * -> {String} settings.animationName - name of animations. List of available in comments at Animator.js
+   * -> {number} settings.animationDuration - duration of animation. Gets time in ms.
+   * -> {boolean} settings.autoScroll - true, if auto scroll is on.
+   * -> {number} settings.autoScrollDelay - delay before auto scroll.
    */
   function Slider() {
     var _settings$autoScrollD, _settings$autoScroll;
@@ -467,6 +525,8 @@ var Slider = /*#__PURE__*/function () {
     _addScrollHandler.add(this);
 
     this.$el = document.querySelector(settings.selector);
+    handleTemplate(this.$el); // this.$el = document.querySelector(settings.selector)
+
     this.$content = this.$el.querySelector('.slider-content');
     this.$contentElems = this.$content.querySelectorAll('.slider-content-li');
     this.$nav = this.$el.querySelector('.slider-nav');
@@ -477,12 +537,14 @@ var Slider = /*#__PURE__*/function () {
       onEnd: _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).bind(this)
     });
     this.scrollImmediately = new ScrollAnimator(this.$content, {
-      animationDuration: 0
+      animationDuration: 0,
+      onEnd: _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).bind(this)
     });
     this.autoScrollDelay = (_settings$autoScrollD = settings.autoScrollDelay) !== null && _settings$autoScrollD !== void 0 ? _settings$autoScrollD : defaultAutoScrollDelay;
     this.autoScroll = (_settings$autoScroll = settings.autoScroll) !== null && _settings$autoScroll !== void 0 ? _settings$autoScroll : defaultAutoScroll;
-    this.index = 0;
-    this.$currentContent = this.$contentElems[this.index];
+
+    _classPrivateMethodGet(this, _changeCurrentContent, _changeCurrentContent2).call(this, 0);
+
     this.funcsOnScrollEnd = [];
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
@@ -609,7 +671,7 @@ var _changeCurrentContent2 = function _changeCurrentContent2(newIndex) {
 
   _classPrivateMethodGet(this, _updateNavigationCurrentView, _updateNavigationCurrentView2).call(this);
 };
-},{"./ScrollAnimator":"slider/ScrollAnimator.js"}],"index.js":[function(require,module,exports) {
+},{"./ScrollAnimator":"slider/ScrollAnimator.js","./template":"slider/template.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _Slider = require("./slider/Slider");
@@ -618,7 +680,7 @@ var slider = new _Slider.Slider({
   selector: '.slider',
   animationName: 'easy-easy',
   animationDuration: 300,
-  autoScroll: true,
+  autoScroll: false,
   autoScrollDelay: 2400
 });
 window.s = slider;
@@ -655,7 +717,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63753" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50709" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
