@@ -7,6 +7,12 @@ export class Slider {
     /**
      *
      * @param {object} settings
+     * settings can have following parameters:
+     * -> {String} selector - required parameter. It is html selector for slider.
+     * -> {String} animationName - name of animations. List of available in comments at Animator.js
+     * -> {number} animationDuration - duration of animation. Gets time in ms.
+     * -> {boolean} autoScroll - true, if auto scroll is on.
+     * -> {number} autoScrollDelay - delay before auto scroll.
      */
     constructor(settings= {}) {
         this.$el = document.querySelector(settings.selector)
@@ -29,12 +35,12 @@ export class Slider {
         this.autoScrollDelay = settings.autoScrollDelay ?? defaultAutoScrollDelay
         this.autoScroll = settings.autoScroll ?? defaultAutoScroll
 
-        this.index = settings.numberOfStartElement ?? 0
+        this.index = 0
 
         this.#setup()
     }
 
-    addScrollHandler() {
+    #addScrollHandler() {
         this.$content.addEventListener('mousewheel', (event) => {
             // 1 - next, -1 - previous
             const shiftContentCoefficient = event.wheelDelta < 0 ? 1 : -1
@@ -44,22 +50,13 @@ export class Slider {
         })
     }
 
-    addClickHandler() {
+    #addClickHandler() {
         this.$navElems.forEach(($el, index) => {
             $el.addEventListener('click', (event) => {
                 this.goToContentWithIndex(index)
                 return false;
             })
         })
-    }
-
-    #setup() {
-        // this.goToContentWithIndex = this.goToContentWithIndex.bind(this)
-        this.addScrollHandler()
-        this.addClickHandler()
-        if (this.autoScroll) {
-            this.#addAutoScroll()
-        }
     }
 
     #addAutoScroll() {
@@ -69,8 +66,22 @@ export class Slider {
     }
 
     /**
-     * go to element in <li> of <ul> in content.
-     * @param {number} newIndex - index of element. Starts with 0
+     * Some setup for slider. It adds listener handlers and auto scroll.
+     */
+
+    #setup() {
+        // this.goToContentWithIndex = this.goToContentWithIndex.bind(this)
+        this.#addScrollHandler()
+        this.#addClickHandler()
+        if (this.autoScroll) {
+            this.#addAutoScroll()
+        }
+    }
+
+    /**
+     * slider will shows element <li> of <ul> with new index.
+     *
+     * @param {number} newIndex - index of element. Starts with 0.
      */
     goToContentWithIndex(newIndex) {
 
@@ -94,10 +105,10 @@ export class Slider {
         this.scrollAnimator.scrollShift(xShift)
 
         this.index = newIndex
-        this.updateNavigationCurrentView()
+        this.#updateNavigationCurrentView()
     }
 
-    updateNavigationCurrentView() {
+    #updateNavigationCurrentView() {
         this.$navElems.forEach(($el) => {
             $el.classList.remove('active')
         })

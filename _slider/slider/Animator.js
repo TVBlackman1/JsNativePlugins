@@ -1,5 +1,17 @@
 /**
  *
+ * Animator has following animation names:
+ * -> easy-easy
+ * -> quad
+ * -> linear
+ * -> mikhail-func
+ * -> daniil-func
+ * -> paral-func
+ * -> first-func
+ * -> lags-func
+ * -> andrey-func
+ * -> kiril-func
+ *
  * @returns {{getAnimationFunction: (function(*=): function(*): *)}}
  * @constructor
  */
@@ -110,7 +122,7 @@ export const Animator = () => {
     }
 
     const paral = {
-        name: 'paral',
+        name: 'paral-func',
         func: (x) => {
             return Math.sin(2.7*x)*x+x
         },
@@ -118,7 +130,7 @@ export const Animator = () => {
     }
 
     const first = {
-        name: 'first',
+        name: 'first-func',
         func: (x) => {
             x-=4
             return Math.pow(1+1/(Math.pow(2.17,x)), Math.pow(2.17, x)) - 1
@@ -127,7 +139,7 @@ export const Animator = () => {
     }
 
     const lags = {
-        name: 'lags',
+        name: 'lags-func',
         func: (x) => {
             const a = Math.sin(x/12) + 0.99
             let b = 12 * a / Math.abs(a)
@@ -139,7 +151,7 @@ export const Animator = () => {
     }
 
     const andrey = {
-        name: 'andrey',
+        name: 'andrey-func',
         func: (x) => {
             x+=0.1
             return 1/x/Math.cos(Math.round(x))+Math.sqrt(Math.abs(x))
@@ -148,9 +160,8 @@ export const Animator = () => {
     }
 
     const kiril = {
-        name: 'kiril',
+        name: 'kiril-func',
         func: (x) => {
-            // x+=0.1
             return -(Math.cos(Math.PI*x)-1)/2
         },
         maxFuncX: 1

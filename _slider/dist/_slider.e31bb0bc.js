@@ -129,6 +129,18 @@ var _this = void 0;
 
 /**
  *
+ * Animator has following animation names:
+ * -> easy-easy
+ * -> quad
+ * -> linear
+ * -> mikhail-func
+ * -> daniil-func
+ * -> paral-func
+ * -> first-func
+ * -> lags-func
+ * -> andrey-func
+ * -> kiril-func
+ *
  * @returns {{getAnimationFunction: (function(*=): function(*): *)}}
  * @constructor
  */
@@ -228,14 +240,14 @@ var Animator = function Animator() {
     maxFuncX: 35
   };
   var paral = {
-    name: 'paral',
+    name: 'paral-func',
     func: function func(x) {
       return Math.sin(2.7 * x) * x + x;
     },
     maxFuncX: 5
   };
   var first = {
-    name: 'first',
+    name: 'first-func',
     func: function func(x) {
       x -= 4;
       return Math.pow(1 + 1 / Math.pow(2.17, x), Math.pow(2.17, x)) - 1;
@@ -243,7 +255,7 @@ var Animator = function Animator() {
     maxFuncX: 8
   };
   var lags = {
-    name: 'lags',
+    name: 'lags-func',
     func: function func(x) {
       var a = Math.sin(x / 12) + 0.99;
       var b = 12 * a / Math.abs(a);
@@ -253,7 +265,7 @@ var Animator = function Animator() {
     maxFuncX: 300
   };
   var andrey = {
-    name: 'andrey',
+    name: 'andrey-func',
     func: function func(x) {
       x += 0.1;
       return 1 / x / Math.cos(Math.round(x)) + Math.sqrt(Math.abs(x));
@@ -261,9 +273,8 @@ var Animator = function Animator() {
     maxFuncX: 100
   };
   var kiril = {
-    name: 'kiril',
+    name: 'kiril-func',
     func: function func(x) {
-      // x+=0.1
       return -(Math.cos(Math.PI * x) - 1) / 2;
     },
     maxFuncX: 1
@@ -420,25 +431,43 @@ var _require = require('./ScrollAnimator'),
 var defaultAutoScrollDelay = 2400;
 var defaultAutoScroll = false;
 
-var _setup = new WeakSet();
+var _addScrollHandler = new WeakSet();
+
+var _addClickHandler = new WeakSet();
 
 var _addAutoScroll = new WeakSet();
+
+var _setup = new WeakSet();
+
+var _updateNavigationCurrentView = new WeakSet();
 
 var Slider = /*#__PURE__*/function () {
   /**
    *
    * @param {object} settings
+   * settings can have following parameters:
+   * -> {String} selector - required parameter. It is html selector for slider.
+   * -> {String} animationName - name of animations. List of available in comments at Animator.js
+   * -> {number} animationDuration - duration of animation. Gets time in ms.
+   * -> {boolean} autoScroll - true, if auto scroll is on.
+   * -> {number} autoScrollDelay - delay before auto scroll.
    */
   function Slider() {
-    var _settings$autoScrollD, _settings$autoScroll, _settings$numberOfSta;
+    var _settings$autoScrollD, _settings$autoScroll;
 
     var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Slider);
 
-    _addAutoScroll.add(this);
+    _updateNavigationCurrentView.add(this);
 
     _setup.add(this);
+
+    _addAutoScroll.add(this);
+
+    _addClickHandler.add(this);
+
+    _addScrollHandler.add(this);
 
     this.$el = document.querySelector(settings.selector);
     this.$content = this.$el.querySelector('.slider-content');
@@ -454,44 +483,18 @@ var Slider = /*#__PURE__*/function () {
     });
     this.autoScrollDelay = (_settings$autoScrollD = settings.autoScrollDelay) !== null && _settings$autoScrollD !== void 0 ? _settings$autoScrollD : defaultAutoScrollDelay;
     this.autoScroll = (_settings$autoScroll = settings.autoScroll) !== null && _settings$autoScroll !== void 0 ? _settings$autoScroll : defaultAutoScroll;
-    this.index = (_settings$numberOfSta = settings.numberOfStartElement) !== null && _settings$numberOfSta !== void 0 ? _settings$numberOfSta : 0;
+    this.index = 0;
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
   }
 
   _createClass(Slider, [{
-    key: "addScrollHandler",
-    value: function addScrollHandler() {
-      var _this = this;
-
-      this.$content.addEventListener('mousewheel', function (event) {
-        // 1 - next, -1 - previous
-        var shiftContentCoefficient = event.wheelDelta < 0 ? 1 : -1;
-
-        _this.goToContentWithIndex(_this.index + shiftContentCoefficient);
-
-        return false;
-      });
-    }
-  }, {
-    key: "addClickHandler",
-    value: function addClickHandler() {
-      var _this2 = this;
-
-      this.$navElems.forEach(function ($el, index) {
-        $el.addEventListener('click', function (event) {
-          _this2.goToContentWithIndex(index);
-
-          return false;
-        });
-      });
-    }
-  }, {
     key: "goToContentWithIndex",
 
     /**
-     * go to element in <li> of <ul> in content.
-     * @param {number} newIndex - index of element. Starts with 0
+     * slider will shows element <li> of <ul> with new index.
+     *
+     * @param {number} newIndex - index of element. Starts with 0.
      */
     value: function goToContentWithIndex(newIndex) {
       if (newIndex < 0) {
@@ -508,15 +511,8 @@ var Slider = /*#__PURE__*/function () {
       var xShift = leftOfNewElement - leftOfCurrent;
       this.scrollAnimator.scrollShift(xShift);
       this.index = newIndex;
-      this.updateNavigationCurrentView();
-    }
-  }, {
-    key: "updateNavigationCurrentView",
-    value: function updateNavigationCurrentView() {
-      this.$navElems.forEach(function ($el) {
-        $el.classList.remove('active');
-      });
-      this.$navElems[this.index].classList.add('active');
+
+      _classPrivateMethodGet(this, _updateNavigationCurrentView, _updateNavigationCurrentView2).call(this);
     }
   }]);
 
@@ -525,14 +521,29 @@ var Slider = /*#__PURE__*/function () {
 
 exports.Slider = Slider;
 
-var _setup2 = function _setup2() {
-  // this.goToContentWithIndex = this.goToContentWithIndex.bind(this)
-  this.addScrollHandler();
-  this.addClickHandler();
+var _addScrollHandler2 = function _addScrollHandler2() {
+  var _this = this;
 
-  if (this.autoScroll) {
-    _classPrivateMethodGet(this, _addAutoScroll, _addAutoScroll2).call(this);
-  }
+  this.$content.addEventListener('mousewheel', function (event) {
+    // 1 - next, -1 - previous
+    var shiftContentCoefficient = event.wheelDelta < 0 ? 1 : -1;
+
+    _this.goToContentWithIndex(_this.index + shiftContentCoefficient);
+
+    return false;
+  });
+};
+
+var _addClickHandler2 = function _addClickHandler2() {
+  var _this2 = this;
+
+  this.$navElems.forEach(function ($el, index) {
+    $el.addEventListener('click', function (event) {
+      _this2.goToContentWithIndex(index);
+
+      return false;
+    });
+  });
 };
 
 var _addAutoScroll2 = function _addAutoScroll2() {
@@ -542,6 +553,24 @@ var _addAutoScroll2 = function _addAutoScroll2() {
     _this3.goToContentWithIndex(_this3.index + 1);
   }, this.autoScrollDelay);
 };
+
+var _setup2 = function _setup2() {
+  // this.goToContentWithIndex = this.goToContentWithIndex.bind(this)
+  _classPrivateMethodGet(this, _addScrollHandler, _addScrollHandler2).call(this);
+
+  _classPrivateMethodGet(this, _addClickHandler, _addClickHandler2).call(this);
+
+  if (this.autoScroll) {
+    _classPrivateMethodGet(this, _addAutoScroll, _addAutoScroll2).call(this);
+  }
+};
+
+var _updateNavigationCurrentView2 = function _updateNavigationCurrentView2() {
+  this.$navElems.forEach(function ($el) {
+    $el.classList.remove('active');
+  });
+  this.$navElems[this.index].classList.add('active');
+};
 },{"./ScrollAnimator":"slider/ScrollAnimator.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -549,7 +578,6 @@ var _Slider = require("./slider/Slider");
 
 var slider = new _Slider.Slider({
   selector: '.slider',
-  // numberOfStartElement: 0,
   animationName: 'easy-easy',
   animationDuration: 400,
   autoScroll: true,
@@ -584,7 +612,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50131" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50503" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
