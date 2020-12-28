@@ -36,6 +36,7 @@ export class Slider {
         this.autoScroll = settings.autoScroll ?? defaultAutoScroll
 
         this.index = 0
+        this.funcsOnScrollEnd = []
 
         this.#setup()
     }
@@ -79,6 +80,22 @@ export class Slider {
     }
 
     /**
+     * Called on end of scroll
+     *
+     * @param {function(index: number)} func
+     */
+    subscribeOnScrollEnd(func) {
+        this.funcsOnScrollEnd.push(func)
+    }
+
+    #notifyOnScrollEnd() {
+        this.funcsOnScrollEnd.forEach( (func) => {
+            func(this.index)
+        })
+    }
+
+
+    /**
      * slider will shows element <li> of <ul> with new index.
      *
      * @param {number} newIndex - index of element. Starts with 0.
@@ -102,10 +119,12 @@ export class Slider {
 
         const xShift = leftOfNewElement - leftOfCurrent
 
-        this.scrollAnimator.scrollShift(xShift)
-
         this.index = newIndex
+
+        this.scrollAnimator.scrollShift(xShift)
         this.#updateNavigationCurrentView()
+
+        this.#notifyOnScrollEnd()
     }
 
     #updateNavigationCurrentView() {

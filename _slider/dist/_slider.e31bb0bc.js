@@ -312,34 +312,28 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
-
 var defaultAnimationName = 'linear';
 var defaultAnimationDuration = 600;
-
-var _notifyOnScrollEnd = new WeakSet();
 
 var ScrollAnimator = /*#__PURE__*/function () {
   /**
    *
    * @param $scrollableElement - DOM object like div, ul, etc.
    * @param {Object} settings - settings of animator.
+   * @param {string=} settings.animationName - animation name
+   * @param {number=} settings.animationDuration - animation duration
+   * @param {function} settings.onEnd - function will be calling in end of animation.
    */
   function ScrollAnimator($scrollableElement) {
-    var _settings$animationNa, _settings$animationDu;
+    var _settings$onEnd, _settings$animationNa, _settings$animationDu;
 
     var settings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     _classCallCheck(this, ScrollAnimator);
 
-    _notifyOnScrollEnd.add(this);
-
     this.$scrollableElement = $scrollableElement;
     this.animatedInMoment = false;
-    this.funcsOnScrollEnd = [];
-    this.subscribeOnScrollEnd(function () {
-      console.log("end");
-    });
+    this.onAnimationEnd = (_settings$onEnd = settings.onEnd) !== null && _settings$onEnd !== void 0 ? _settings$onEnd : function () {};
     var animationName = (_settings$animationNa = settings.animationName) !== null && _settings$animationNa !== void 0 ? _settings$animationNa : defaultAnimationName;
     this.animationFunction = (0, _Animator.Animator)().getAnimationFunction(animationName);
 
@@ -352,12 +346,12 @@ var ScrollAnimator = /*#__PURE__*/function () {
   }
 
   _createClass(ScrollAnimator, [{
-    key: "subscribeOnScrollEnd",
-    value: function subscribeOnScrollEnd(func) {
-      this.funcsOnScrollEnd.push(func);
-    }
-  }, {
     key: "scrollShift",
+
+    /**
+     *
+     * @param difference
+     */
     value: function scrollShift(difference) {
       if (this.animated || difference === 0) return;
       this.animateShift(difference);
@@ -389,7 +383,7 @@ var ScrollAnimator = /*#__PURE__*/function () {
         _this.$scrollableElement.scrollLeft = end;
         _this.animatedInMoment = false;
 
-        _classPrivateMethodGet(_this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(_this);
+        _this.onAnimationEnd();
       }, duration);
     }
   }, {
@@ -403,12 +397,6 @@ var ScrollAnimator = /*#__PURE__*/function () {
 }();
 
 exports.ScrollAnimator = ScrollAnimator;
-
-var _notifyOnScrollEnd2 = function _notifyOnScrollEnd2() {
-  this.funcsOnScrollEnd.forEach(function (func) {
-    func();
-  });
-};
 },{"./Animator":"slider/Animator.js"}],"slider/Slider.js":[function(require,module,exports) {
 "use strict";
 
@@ -439,6 +427,8 @@ var _addAutoScroll = new WeakSet();
 
 var _setup = new WeakSet();
 
+var _notifyOnScrollEnd = new WeakSet();
+
 var _updateNavigationCurrentView = new WeakSet();
 
 var Slider = /*#__PURE__*/function () {
@@ -460,6 +450,8 @@ var Slider = /*#__PURE__*/function () {
     _classCallCheck(this, Slider);
 
     _updateNavigationCurrentView.add(this);
+
+    _notifyOnScrollEnd.add(this);
 
     _setup.add(this);
 
@@ -484,11 +476,23 @@ var Slider = /*#__PURE__*/function () {
     this.autoScrollDelay = (_settings$autoScrollD = settings.autoScrollDelay) !== null && _settings$autoScrollD !== void 0 ? _settings$autoScrollD : defaultAutoScrollDelay;
     this.autoScroll = (_settings$autoScroll = settings.autoScroll) !== null && _settings$autoScroll !== void 0 ? _settings$autoScroll : defaultAutoScroll;
     this.index = 0;
+    this.funcsOnScrollEnd = [];
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
   }
 
   _createClass(Slider, [{
+    key: "subscribeOnScrollEnd",
+
+    /**
+     * Called on end of scroll
+     *
+     * @param {function(index: number)} func
+     */
+    value: function subscribeOnScrollEnd(func) {
+      this.funcsOnScrollEnd.push(func);
+    }
+  }, {
     key: "goToContentWithIndex",
 
     /**
@@ -509,10 +513,12 @@ var Slider = /*#__PURE__*/function () {
       var newContentElement = this.$contentElems[newIndex];
       var leftOfNewElement = newContentElement.getBoundingClientRect().left;
       var xShift = leftOfNewElement - leftOfCurrent;
-      this.scrollAnimator.scrollShift(xShift);
       this.index = newIndex;
+      this.scrollAnimator.scrollShift(xShift);
 
       _classPrivateMethodGet(this, _updateNavigationCurrentView, _updateNavigationCurrentView2).call(this);
+
+      _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(this);
     }
   }]);
 
@@ -565,6 +571,14 @@ var _setup2 = function _setup2() {
   }
 };
 
+var _notifyOnScrollEnd2 = function _notifyOnScrollEnd2() {
+  var _this4 = this;
+
+  this.funcsOnScrollEnd.forEach(function (func) {
+    func(_this4.index);
+  });
+};
+
 var _updateNavigationCurrentView2 = function _updateNavigationCurrentView2() {
   this.$navElems.forEach(function ($el) {
     $el.classList.remove('active');
@@ -584,6 +598,11 @@ var slider = new _Slider.Slider({
   autoScrollDelay: 2400
 });
 window.s = slider;
+slider.subscribeOnScrollEnd(function (index) {
+  if (index === 0) {
+    console.log("Happy New Year");
+  }
+});
 },{"./slider/Slider":"slider/Slider.js"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

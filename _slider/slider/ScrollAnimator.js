@@ -8,17 +8,19 @@ export class ScrollAnimator {
      *
      * @param $scrollableElement - DOM object like div, ul, etc.
      * @param {Object} settings - settings of animator.
+     * @param {string=} settings.animationName - animation name
+     * @param {number=} settings.animationDuration - animation duration
+     * @param {function} settings.onEnd - function will be calling in end of animation.
      */
     constructor($scrollableElement, settings = {}) {
         this.$scrollableElement = $scrollableElement
         this.animatedInMoment = false
-        this.funcsOnScrollEnd = []
-        this.subscribeOnScrollEnd(()=>{
-            console.log("end")
-        })
+
+        this.onAnimationEnd = settings.onEnd ?? (()=>{})
 
         const animationName = settings.animationName ?? defaultAnimationName
         this.animationFunction = Animator().getAnimationFunction(animationName)
+
         if (!this.animationFunction) {
             // name not exist in animator
             this.animationFunction = Animator().getAnimationFunction(defaultAnimationName)
@@ -32,17 +34,10 @@ export class ScrollAnimator {
         return this.animatedInMoment
     }
 
-    subscribeOnScrollEnd(func) {
-        this.funcsOnScrollEnd.push(func)
-    }
-
-    #notifyOnScrollEnd() {
-        this.funcsOnScrollEnd.forEach( (func) => {
-            func()
-        })
-    }
-
-
+    /**
+     *
+     * @param difference
+     */
     scrollShift(difference) {
         if(this.animated || difference === 0)
             return
@@ -71,10 +66,7 @@ export class ScrollAnimator {
             clearInterval(interval)
             this.$scrollableElement.scrollLeft = end
             this.animatedInMoment = false
-            this.#notifyOnScrollEnd()
+            this.onAnimationEnd()
         }, duration)
-
     }
-
-
 }

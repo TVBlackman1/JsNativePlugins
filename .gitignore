@@ -1,3 +1,5 @@
 .idea
 _select/dist
 _select/.cache
+_slider/dist
+_slider/.cache

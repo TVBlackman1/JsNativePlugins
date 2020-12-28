@@ -8,3 +8,9 @@ const slider = new Slider({
     autoScrollDelay: 2400
 })
 window.s = slider
+
+slider.subscribeOnScrollEnd((index) => {
+    if(index === 0) {
+        console.log("Happy New Year")
+    }
+})
