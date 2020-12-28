@@ -147,6 +147,15 @@ export const Animator = () => {
         maxFuncX: 100
     }
 
+    const kiril = {
+        name: 'kiril',
+        func: (x) => {
+            // x+=0.1
+            return -(Math.cos(Math.PI*x)-1)/2
+        },
+        maxFuncX: 1
+    }
+
 
     addMathFunction(quad)
     addMathFunction(easyEasy)
@@ -157,6 +166,7 @@ export const Animator = () => {
     addMathFunction(first)
     addMathFunction(lags)
     addMathFunction(andrey)
+    addMathFunction(kiril)
 
     return {
         getAnimationFunction,

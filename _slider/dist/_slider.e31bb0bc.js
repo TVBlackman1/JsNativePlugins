@@ -260,6 +260,14 @@ var Animator = function Animator() {
     },
     maxFuncX: 100
   };
+  var kiril = {
+    name: 'kiril',
+    func: function func(x) {
+      // x+=0.1
+      return -(Math.cos(Math.PI * x) - 1) / 2;
+    },
+    maxFuncX: 1
+  };
   addMathFunction(quad);
   addMathFunction(easyEasy);
   addMathFunction(linear);
@@ -269,6 +277,7 @@ var Animator = function Animator() {
   addMathFunction(first);
   addMathFunction(lags);
   addMathFunction(andrey);
+  addMathFunction(kiril);
   return {
     getAnimationFunction: getAnimationFunction,
     addMathFunction: addMathFunction
@@ -408,7 +417,12 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 var _require = require('./ScrollAnimator'),
     ScrollAnimator = _require.ScrollAnimator;
 
+var defaultAutoScrollDelay = 2400;
+var defaultAutoScroll = false;
+
 var _setup = new WeakSet();
+
+var _addAutoScroll = new WeakSet();
 
 var Slider = /*#__PURE__*/function () {
   /**
@@ -416,19 +430,21 @@ var Slider = /*#__PURE__*/function () {
    * @param {object} settings
    */
   function Slider() {
-    var _settings$numberOfSta;
+    var _settings$autoScrollD, _settings$autoScroll, _settings$numberOfSta;
 
     var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Slider);
+
+    _addAutoScroll.add(this);
 
     _setup.add(this);
 
     this.$el = document.querySelector(settings.selector);
     this.$content = this.$el.querySelector('.slider-content');
     this.$contentElems = this.$content.querySelectorAll('.slider-content-li');
-    this.$menu = this.$el.querySelector('.slider-menu');
-    this.$menuElems = this.$menu.querySelectorAll('.slider-menu-elem');
+    this.$nav = this.$el.querySelector('.slider-nav');
+    this.$navElems = this.$nav.querySelectorAll('.slider-nav-elem');
     this.scrollAnimator = new ScrollAnimator(this.$content, {
       animationName: settings.animationName,
       animationDuration: settings.animationDuration
@@ -436,7 +452,8 @@ var Slider = /*#__PURE__*/function () {
     this.scrollImmediately = new ScrollAnimator(this.$content, {
       animationDuration: 0
     });
-    this.index = 0;
+    this.autoScrollDelay = (_settings$autoScrollD = settings.autoScrollDelay) !== null && _settings$autoScrollD !== void 0 ? _settings$autoScrollD : defaultAutoScrollDelay;
+    this.autoScroll = (_settings$autoScroll = settings.autoScroll) !== null && _settings$autoScroll !== void 0 ? _settings$autoScroll : defaultAutoScroll;
     this.index = (_settings$numberOfSta = settings.numberOfStartElement) !== null && _settings$numberOfSta !== void 0 ? _settings$numberOfSta : 0;
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
@@ -454,6 +471,19 @@ var Slider = /*#__PURE__*/function () {
         _this.goToContentWithIndex(_this.index + shiftContentCoefficient);
 
         return false;
+      });
+    }
+  }, {
+    key: "addClickHandler",
+    value: function addClickHandler() {
+      var _this2 = this;
+
+      this.$navElems.forEach(function ($el, index) {
+        $el.addEventListener('click', function (event) {
+          _this2.goToContentWithIndex(index);
+
+          return false;
+        });
       });
     }
   }, {
@@ -478,15 +508,15 @@ var Slider = /*#__PURE__*/function () {
       var xShift = leftOfNewElement - leftOfCurrent;
       this.scrollAnimator.scrollShift(xShift);
       this.index = newIndex;
-      this.updateMenuCurrentView();
+      this.updateNavigationCurrentView();
     }
   }, {
-    key: "updateMenuCurrentView",
-    value: function updateMenuCurrentView() {
-      this.$menuElems.forEach(function ($el) {
+    key: "updateNavigationCurrentView",
+    value: function updateNavigationCurrentView() {
+      this.$navElems.forEach(function ($el) {
         $el.classList.remove('active');
       });
-      this.$menuElems[this.index].classList.add('active');
+      this.$navElems[this.index].classList.add('active');
     }
   }]);
 
@@ -496,7 +526,21 @@ var Slider = /*#__PURE__*/function () {
 exports.Slider = Slider;
 
 var _setup2 = function _setup2() {
+  // this.goToContentWithIndex = this.goToContentWithIndex.bind(this)
   this.addScrollHandler();
+  this.addClickHandler();
+
+  if (this.autoScroll) {
+    _classPrivateMethodGet(this, _addAutoScroll, _addAutoScroll2).call(this);
+  }
+};
+
+var _addAutoScroll2 = function _addAutoScroll2() {
+  var _this3 = this;
+
+  this.autoScrollInterval = setInterval(function () {
+    _this3.goToContentWithIndex(_this3.index + 1);
+  }, this.autoScrollDelay);
 };
 },{"./ScrollAnimator":"slider/ScrollAnimator.js"}],"index.js":[function(require,module,exports) {
 "use strict";
@@ -505,9 +549,11 @@ var _Slider = require("./slider/Slider");
 
 var slider = new _Slider.Slider({
   selector: '.slider',
-  numberOfStartElement: 0,
+  // numberOfStartElement: 0,
   animationName: 'easy-easy',
-  animationDuration: 400
+  animationDuration: 400,
+  autoScroll: true,
+  autoScrollDelay: 2400
 });
 window.s = slider;
 },{"./slider/Slider":"slider/Slider.js"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -538,7 +584,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50295" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50131" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

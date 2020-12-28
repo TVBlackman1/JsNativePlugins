@@ -55,7 +55,7 @@ div.wrap {
     }
   }
 
-  &-menu {
+  &-nav {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -68,6 +68,7 @@ div.wrap {
     justify-content: center;
 
     &-elem {
+      cursor: pointer;
       height: 20px;
       width: 20px;
       background-color: #2c333733;
