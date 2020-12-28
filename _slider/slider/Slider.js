@@ -37,7 +37,7 @@ export class Slider {
         this.autoScroll = settings.autoScroll ?? defaultAutoScroll
 
         this.index = 0
-        this.currentContent = this.$contentElems[this.index]
+        this.$currentContent = this.$contentElems[this.index]
         this.funcsOnScrollEnd = []
 
         this.#setup()
@@ -100,6 +100,10 @@ export class Slider {
         this.#notifyOnScrollEnd()
     }
 
+    get $getCurrentContent() {
+        return this.$currentContent
+    }
+
 
     /**
      * slider will shows element <li> of <ul> with new index.
@@ -141,7 +145,7 @@ export class Slider {
 
     #changeCurrentContent(newIndex) {
         this.index = newIndex
-        this.currentContent = this.$contentElems[this.index]
+        this.$currentContent = this.$contentElems[this.index]
         this.#updateNavigationCurrentView()
     }
 }

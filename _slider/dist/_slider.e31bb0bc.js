@@ -482,7 +482,7 @@ var Slider = /*#__PURE__*/function () {
     this.autoScrollDelay = (_settings$autoScrollD = settings.autoScrollDelay) !== null && _settings$autoScrollD !== void 0 ? _settings$autoScrollD : defaultAutoScrollDelay;
     this.autoScroll = (_settings$autoScroll = settings.autoScroll) !== null && _settings$autoScroll !== void 0 ? _settings$autoScroll : defaultAutoScroll;
     this.index = 0;
-    this.currentContent = this.$contentElems[this.index];
+    this.$currentContent = this.$contentElems[this.index];
     this.funcsOnScrollEnd = [];
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
@@ -504,14 +504,14 @@ var Slider = /*#__PURE__*/function () {
     value: function forcedNotify() {
       _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(this);
     }
+  }, {
+    key: "goToContentWithIndex",
+
     /**
      * slider will shows element <li> of <ul> with new index.
      *
      * @param {number} newIndex - index of element. Starts with 0.
      */
-
-  }, {
-    key: "goToContentWithIndex",
     value: function goToContentWithIndex(newIndex) {
       if (newIndex < 0) {
         newIndex = this.$contentElems.length - 1;
@@ -531,6 +531,11 @@ var Slider = /*#__PURE__*/function () {
 
 
       this.scrollAnimator.scrollShift(xShift);
+    }
+  }, {
+    key: "$getCurrentContent",
+    get: function get() {
+      return this.$currentContent;
     }
   }]);
 
@@ -600,7 +605,7 @@ var _updateNavigationCurrentView2 = function _updateNavigationCurrentView2() {
 
 var _changeCurrentContent2 = function _changeCurrentContent2(newIndex) {
   this.index = newIndex;
-  this.currentContent = this.$contentElems[this.index];
+  this.$currentContent = this.$contentElems[this.index];
 
   _classPrivateMethodGet(this, _updateNavigationCurrentView, _updateNavigationCurrentView2).call(this);
 };
@@ -619,7 +624,7 @@ var slider = new _Slider.Slider({
 window.s = slider;
 var $effected = document.querySelector('.effected');
 slider.subscribeOnScrollEnd(function (index) {
-  $effected.style.backgroundImage = slider.$contentElems[slider.index].style.backgroundImage;
+  $effected.style.backgroundImage = slider.$getCurrentContent.style.backgroundImage;
 });
 slider.forcedNotify();
 },{"./slider/Slider":"slider/Slider.js"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
