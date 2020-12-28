@@ -1,0 +1,16 @@
+.effected {
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-sizing: border-box;
+  padding: 1em;
+  margin: auto;
+  width: 125px;
+  height: 75px;
+  background-position: center;
+  background-origin: content-box;
+  background-size: cover;
+
+  transition: 0.3s background-color;
+
+}

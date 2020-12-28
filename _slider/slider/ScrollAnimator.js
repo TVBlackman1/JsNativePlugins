@@ -65,8 +65,8 @@ export class ScrollAnimator {
         setTimeout(()=> {
             clearInterval(interval)
             this.$scrollableElement.scrollLeft = end
-            this.animatedInMoment = false
             this.onAnimationEnd()
+            this.animatedInMoment = false
         }, duration)
     }
 }

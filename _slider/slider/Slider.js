@@ -25,7 +25,8 @@ export class Slider {
 
         this.scrollAnimator = new ScrollAnimator(this.$content, {
             animationName: settings.animationName,
-            animationDuration: settings.animationDuration
+            animationDuration: settings.animationDuration,
+            onEnd: this.#notifyOnScrollEnd.bind(this)
         })
 
         this.scrollImmediately = new ScrollAnimator(this.$content, {
@@ -36,6 +37,7 @@ export class Slider {
         this.autoScroll = settings.autoScroll ?? defaultAutoScroll
 
         this.index = 0
+        this.currentContent = this.$contentElems[this.index]
         this.funcsOnScrollEnd = []
 
         this.#setup()
@@ -94,6 +96,10 @@ export class Slider {
         })
     }
 
+    forcedNotify() {
+        this.#notifyOnScrollEnd()
+    }
+
 
     /**
      * slider will shows element <li> of <ul> with new index.
@@ -119,12 +125,11 @@ export class Slider {
 
         const xShift = leftOfNewElement - leftOfCurrent
 
-        this.index = newIndex
-
+        this.#changeCurrentContent(newIndex)
+        // change index before play animation because functions, that invoke
+        // in the end of animation used newIndex. Maybe can be problems if animation delay is 0.
         this.scrollAnimator.scrollShift(xShift)
-        this.#updateNavigationCurrentView()
 
-        this.#notifyOnScrollEnd()
     }
 
     #updateNavigationCurrentView() {
@@ -132,5 +137,11 @@ export class Slider {
             $el.classList.remove('active')
         })
         this.$navElems[this.index].classList.add('active')
+    }
+
+    #changeCurrentContent(newIndex) {
+        this.index = newIndex
+        this.currentContent = this.$contentElems[this.index]
+        this.#updateNavigationCurrentView()
     }
 }

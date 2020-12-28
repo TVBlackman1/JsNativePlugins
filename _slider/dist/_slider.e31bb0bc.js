@@ -381,9 +381,10 @@ var ScrollAnimator = /*#__PURE__*/function () {
       setTimeout(function () {
         clearInterval(interval);
         _this.$scrollableElement.scrollLeft = end;
-        _this.animatedInMoment = false;
 
         _this.onAnimationEnd();
+
+        _this.animatedInMoment = false;
       }, duration);
     }
   }, {
@@ -431,6 +432,8 @@ var _notifyOnScrollEnd = new WeakSet();
 
 var _updateNavigationCurrentView = new WeakSet();
 
+var _changeCurrentContent = new WeakSet();
+
 var Slider = /*#__PURE__*/function () {
   /**
    *
@@ -448,6 +451,8 @@ var Slider = /*#__PURE__*/function () {
     var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Slider);
+
+    _changeCurrentContent.add(this);
 
     _updateNavigationCurrentView.add(this);
 
@@ -468,7 +473,8 @@ var Slider = /*#__PURE__*/function () {
     this.$navElems = this.$nav.querySelectorAll('.slider-nav-elem');
     this.scrollAnimator = new ScrollAnimator(this.$content, {
       animationName: settings.animationName,
-      animationDuration: settings.animationDuration
+      animationDuration: settings.animationDuration,
+      onEnd: _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).bind(this)
     });
     this.scrollImmediately = new ScrollAnimator(this.$content, {
       animationDuration: 0
@@ -476,6 +482,7 @@ var Slider = /*#__PURE__*/function () {
     this.autoScrollDelay = (_settings$autoScrollD = settings.autoScrollDelay) !== null && _settings$autoScrollD !== void 0 ? _settings$autoScrollD : defaultAutoScrollDelay;
     this.autoScroll = (_settings$autoScroll = settings.autoScroll) !== null && _settings$autoScroll !== void 0 ? _settings$autoScroll : defaultAutoScroll;
     this.index = 0;
+    this.currentContent = this.$contentElems[this.index];
     this.funcsOnScrollEnd = [];
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
@@ -493,13 +500,18 @@ var Slider = /*#__PURE__*/function () {
       this.funcsOnScrollEnd.push(func);
     }
   }, {
-    key: "goToContentWithIndex",
-
+    key: "forcedNotify",
+    value: function forcedNotify() {
+      _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(this);
+    }
     /**
      * slider will shows element <li> of <ul> with new index.
      *
      * @param {number} newIndex - index of element. Starts with 0.
      */
+
+  }, {
+    key: "goToContentWithIndex",
     value: function goToContentWithIndex(newIndex) {
       if (newIndex < 0) {
         newIndex = this.$contentElems.length - 1;
@@ -513,12 +525,12 @@ var Slider = /*#__PURE__*/function () {
       var newContentElement = this.$contentElems[newIndex];
       var leftOfNewElement = newContentElement.getBoundingClientRect().left;
       var xShift = leftOfNewElement - leftOfCurrent;
-      this.index = newIndex;
+
+      _classPrivateMethodGet(this, _changeCurrentContent, _changeCurrentContent2).call(this, newIndex); // change index before play animation because functions, that invoke
+      // in the end of animation used newIndex. Maybe can be problems if animation delay is 0.
+
+
       this.scrollAnimator.scrollShift(xShift);
-
-      _classPrivateMethodGet(this, _updateNavigationCurrentView, _updateNavigationCurrentView2).call(this);
-
-      _classPrivateMethodGet(this, _notifyOnScrollEnd, _notifyOnScrollEnd2).call(this);
     }
   }]);
 
@@ -585,6 +597,13 @@ var _updateNavigationCurrentView2 = function _updateNavigationCurrentView2() {
   });
   this.$navElems[this.index].classList.add('active');
 };
+
+var _changeCurrentContent2 = function _changeCurrentContent2(newIndex) {
+  this.index = newIndex;
+  this.currentContent = this.$contentElems[this.index];
+
+  _classPrivateMethodGet(this, _updateNavigationCurrentView, _updateNavigationCurrentView2).call(this);
+};
 },{"./ScrollAnimator":"slider/ScrollAnimator.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -593,16 +612,16 @@ var _Slider = require("./slider/Slider");
 var slider = new _Slider.Slider({
   selector: '.slider',
   animationName: 'easy-easy',
-  animationDuration: 400,
+  animationDuration: 300,
   autoScroll: true,
   autoScrollDelay: 2400
 });
 window.s = slider;
+var $effected = document.querySelector('.effected');
 slider.subscribeOnScrollEnd(function (index) {
-  if (index === 0) {
-    console.log("Happy New Year");
-  }
+  $effected.style.backgroundImage = slider.$contentElems[slider.index].style.backgroundImage;
 });
+slider.forcedNotify();
 },{"./slider/Slider":"slider/Slider.js"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -631,7 +650,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50503" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63753" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
