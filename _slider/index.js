@@ -12,6 +12,7 @@ window.s = slider
 const $effected = document.querySelector('.effected')
 
 slider.subscribeOnScrollEnd((index) => {
+    console.log(index)
     $effected.style.backgroundImage = slider.$getCurrentContent.style.backgroundImage
 
 })

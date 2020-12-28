@@ -8,11 +8,11 @@ export class Slider {
      *
      * @param {object} settings
      * settings can have following parameters:
-     * -> {String} selector - required parameter. It is html selector for slider.
-     * -> {String} animationName - name of animations. List of available in comments at Animator.js
-     * -> {number} animationDuration - duration of animation. Gets time in ms.
-     * -> {boolean} autoScroll - true, if auto scroll is on.
-     * -> {number} autoScrollDelay - delay before auto scroll.
+     * -> {String} settings.selector - required parameter. It is html selector for slider.
+     * -> {String} settings.animationName - name of animations. List of available in comments at Animator.js
+     * -> {number} settings.animationDuration - duration of animation. Gets time in ms.
+     * -> {boolean} settings.autoScroll - true, if auto scroll is on.
+     * -> {number} settings.autoScrollDelay - delay before auto scroll.
      */
     constructor(settings= {}) {
         this.$el = document.querySelector(settings.selector)
